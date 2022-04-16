@@ -9,4 +9,4 @@ export const postMapper = (data) =>
     totalComments: post.data.num_comments,
   }));
 
-//BsShift
+//BsShiftFill arrow fill
