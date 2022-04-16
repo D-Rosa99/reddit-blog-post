@@ -1,22 +1,22 @@
-import React from 'react';
+import React from "react";
 
-const Post = (props) => {
-    const {title, content, karmaPoints, index} = props;
+import postStyle from "./post.module.css";
 
-    return (
-        <div>
-            <h2>{title}</h2>
-            <img style={{width: '500px'}} src={content} alt={title}/>
-            <h3>{karmaPoints}</h3>
-            <h1>*********************{index}******************************************</h1>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-        </div>
-    );
-}
+const Post = ({ postObj }) => {
+  const { title, content, karmaPoints } = postObj;
+  const { postCardCCS } = postStyle;
+
+  return (
+    <div className={postCardCCS}>
+      <div>
+        <h3>{karmaPoints}</h3>
+      </div>
+      <div>
+        <h2>{title}</h2>
+        <img style={{ width: "100%" }} src={content} alt={title} />
+      </div>
+    </div>
+  );
+};
 
 export default Post;

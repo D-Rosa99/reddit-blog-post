@@ -1,21 +1,28 @@
-import React, {useEffect, useState} from 'react';
-import Post from '../components/post';
-import { httpRequest } from '../utils/request';
+import React, { useEffect, useState } from "react";
+import Post from "../components/post";
+import { postMapper } from "../utils/mapper";
+import { httpRequest } from "../utils/request";
+
+import homeStyle from "./home.module.css";
 
 const Home = () => {
-    const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const { postBoxCCS } = homeStyle;
 
-    const REDDIT_ALL_POST_URL = 'https://www.reddit.com/r/all.json';
+  const REDDIT_ALL_POST_URL = "https://www.reddit.com/r/all.json";
 
-    useEffect(() => {
-        httpRequest('get', REDDIT_ALL_POST_URL).then(({data: {data}})=> setPosts(data.children));
-    }, []);
-
-    return (
-        <div>
-            {posts.length && posts.map((post, index) => <Post index={index} key={index} title={post.data.title} content={post.data.url} karmaPoints={post.data.ups} />)}
-        </div>
+  useEffect(() => {
+    httpRequest("get", REDDIT_ALL_POST_URL).then(({ data: { data } }) =>
+      setPosts(postMapper(data))
     );
-}
+  }, []);
+
+  return (
+    <div className={postBoxCCS}>
+      {posts.length &&
+        posts.map((post, index) => <Post key={index} postObj={post} />)}
+    </div>
+  );
+};
 
 export default Home;
