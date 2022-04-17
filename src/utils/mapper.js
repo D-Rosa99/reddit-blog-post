@@ -7,6 +7,8 @@ export const postMapper = (data) =>
     redditUser: post.data.subreddit_name_prefixed,
     authorUserName: post.data.author,
     totalComments: post.data.num_comments,
+    postDetail: post.data.permalink,
+    media: post.data?.media,
   }));
 
 //BsShiftFill arrow fill

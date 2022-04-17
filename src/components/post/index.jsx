@@ -11,7 +11,8 @@ import {
 import postStyle from "./post.module.css";
 
 const Post = ({ postObj }) => {
-  const { title, content, karmaPoints, redditUser, authorUserName, totalComments } = postObj;
+  const { title, content, karmaPoints, redditUser, authorUserName, totalComments, contentType } =
+    postObj;
 
   const { postCardCCS, upButtonsCCS, downButtonsCCS, arrowIconCCS, postContentCCS, boxActionCCS } =
     postStyle;
@@ -28,6 +29,7 @@ const Post = ({ postObj }) => {
         </button>
       </div>
       <div className={postContentCCS}>
+        *****************************{contentType}***************************
         <div>
           <span>
             {redditUser} . Posted by u/{authorUserName}

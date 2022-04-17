@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Post from "../components/post";
-import { postMapper } from "../utils/mapper";
-import { httpRequest } from "../utils/request";
+import Post from "../../components/post";
+import { postMapper } from "../../utils/mapper";
+import { httpRequest } from "../../utils/request";
 
 import homeStyle from "./home.module.css";
 
@@ -15,12 +15,11 @@ const Home = () => {
     httpRequest("get", REDDIT_ALL_POST_URL).then(({ data: { data } }) =>
       setPosts(postMapper(data))
     );
-  }, []);
+  }, [posts]);
 
   return (
     <div className={postBoxCCS}>
-      {posts.length &&
-        posts.map((post, index) => <Post key={index} postObj={post} />)}
+      {posts.length && posts.map((post, index) => <Post key={index} postObj={post} />)}
     </div>
   );
 };
