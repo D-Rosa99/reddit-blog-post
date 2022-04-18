@@ -8,7 +8,7 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/post/details" element={<PostDetails />} />
+        <Route path="/r/:redditUser/comments/:clientId/:title" element={<PostDetails />} />
       </Routes>
     </div>
   );

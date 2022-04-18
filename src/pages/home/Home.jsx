@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from "react";
-import Post from "../../components/post";
-import { postMapper } from "../../utils/mapper";
+import { useNavigate } from "react-router-dom";
+import Post from "../../components/post/Post";
+import { postMapper } from "../../mappers/postInfo.mappers";
 import { httpRequest } from "../../utils/request";
 
 import homeStyle from "./home.module.css";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
+
   const { postBoxCCS } = homeStyle;
 
-  const REDDIT_ALL_POST_URL = "https://www.reddit.com/r/all.json";
-
   useEffect(() => {
-    httpRequest("get", REDDIT_ALL_POST_URL).then(({ data: { data } }) =>
+    httpRequest("get", process.env.REACT_APP_REDDIT_ALL_POST_URL).then(({ data: { data } }) =>
       setPosts(postMapper(data))
     );
-  }, [posts]);
+  }, []);
+
+  const handlePostClick = (postDetailUrl) => {
+    navigate(postDetailUrl);
+  };
 
   return (
     <div className={postBoxCCS}>
-      {posts.length && posts.map((post, index) => <Post key={index} postObj={post} />)}
+      {posts.length
+        ? posts.map((post, index) => <Post key={index} postObj={{ ...post, handlePostClick }} />)
+        : "Loading..."}
     </div>
   );
 };

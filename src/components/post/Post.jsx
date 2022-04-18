@@ -7,12 +7,22 @@ import {
   BsBookmark,
   BsShare,
 } from "react-icons/bs";
+import MediaSource from "../mediaSource/MediaSource";
 
 import postStyle from "./post.module.css";
 
 const Post = ({ postObj }) => {
-  const { title, content, karmaPoints, redditUser, authorUserName, totalComments, contentType } =
-    postObj;
+  const {
+    title,
+    content,
+    votePoints,
+    redditUser,
+    authorUserName,
+    totalComments,
+    contentType,
+    postDetail,
+    handlePostClick,
+  } = postObj;
 
   const { postCardCCS, upButtonsCCS, downButtonsCCS, arrowIconCCS, postContentCCS, boxActionCCS } =
     postStyle;
@@ -23,19 +33,18 @@ const Post = ({ postObj }) => {
         <button className={upButtonsCCS}>
           <BsShift className={arrowIconCCS} />
         </button>
-        <h3>{karmaPoints}</h3>
+        <h3>{votePoints}</h3>
         <button className={downButtonsCCS}>
           <BsShift className={arrowIconCCS} />
         </button>
       </div>
-      <div className={postContentCCS}>
-        *****************************{contentType}***************************
+      <div className={postContentCCS} onClick={() => handlePostClick(postDetail)}>
         <div>
           <span>
             {redditUser} . Posted by u/{authorUserName}
           </span>
           <h2>{title}</h2>
-          <img style={{ width: "100%" }} src={content} alt={title} />
+          <MediaSource contentType={contentType} src={content} />
         </div>
         <div className={boxActionCCS}>
           <div>
