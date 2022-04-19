@@ -32,12 +32,10 @@ export const commentAction = (name, text) => {
     },
   };
 
-  const data = httpRequest(
+  return httpRequest(
     "post",
     `${process.env.REACT_APP_PRIVATE_REDDIT_URL}/api/comment`,
     paramsObj,
     headerObj
   );
-
-  console.log("data :>> ", data);
 };

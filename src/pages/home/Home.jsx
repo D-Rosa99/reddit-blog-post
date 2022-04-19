@@ -4,14 +4,14 @@ import Header from "../../components/header/Header";
 import Post from "../../components/post/Post";
 import { postMapper } from "../../mappers/postInfo.mappers";
 import { getRedditOauthToken } from "../../services/redditAuthentication.service";
-import { getRedditData } from "../../services/redditUserAccountData.service";
+import { getKarmaPoint } from "../../services/redditUserAccountData.service";
 import { httpRequest } from "../../utils/request";
 
 import homeStyle from "./home.module.css";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
-  const [redditData, setRedditData] = useState({});
+  const [userKarma, setUserKarma] = useState({});
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -26,7 +26,7 @@ const Home = () => {
     if (oauthCode) {
       searchParams.delete("code");
       getRedditOauthToken(oauthCode);
-      getRedditData().then((data) => setRedditData(data));
+      getKarmaPoint().then((data) => setUserKarma(data));
     }
   }, []);
 
@@ -36,14 +36,14 @@ const Home = () => {
 
   return (
     <div>
-      <Header totalKarma={redditData?.totalKarma} />
+      <Header totalKarma={userKarma?.totalKarma} />
       <div className={postBoxCCS}>
         {posts.length
           ? posts.map((post) => (
               <Post
                 key={post.postName}
                 postObj={{ ...post, handlePostClick }}
-                redditData={redditData}
+                userKarma={userKarma}
               />
             ))
           : "Loading..."}

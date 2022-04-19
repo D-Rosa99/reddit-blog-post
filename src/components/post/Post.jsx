@@ -8,13 +8,17 @@ import {
   BsShare,
   BsShiftFill,
 } from "react-icons/bs";
+import { getVotesHistory } from "../../services/redditUserAccountData.service";
 import { voteAction } from "../../services/redditActions.service";
 import MediaSource from "../mediaSource/MediaSource";
 
 import postStyle from "./post.module.css";
+import { votesFormat } from "../../utils/general";
 
-const Post = ({ postObj, redditData }) => {
+const Post = ({ postObj, userKarma }) => {
+  const [score, setScore] = useState(postObj.votePoints);
   const [voteDir, setVoteDir] = useState(0);
+
   const {
     title,
     content,
@@ -40,21 +44,24 @@ const Post = ({ postObj, redditData }) => {
   } = postStyle;
 
   useEffect(() => {
-    if (checkMatchVotedHistory(redditData?.upVotedHistoryList)) setVoteDir(1);
-    else if (checkMatchVotedHistory(redditData?.downVotedHistoryList)) setVoteDir(-1);
+    if (userKarma?.totalKarma) {
+      getVotesHistory().then((data) => {
+        if (checkMatchVotedHistory(data?.upVotedHistoryList)) setVoteDir(1);
+        else if (checkMatchVotedHistory(data?.downVotedHistoryList)) setVoteDir(-1);
+      });
+    }
   }, []);
 
   const checkMatchVotedHistory = (votedHistory) => {
     if (!votedHistory?.length) return false;
 
     return votedHistory.some((post) => {
-      console.log("post ", post);
       return post.data.title === title;
     });
   };
 
   const handleVoteClick = (voteDir) => {
-    if (!redditData?.totalKarma) {
+    if (!userKarma?.totalKarma) {
       alert("You need to log in to vote");
       return;
     }
@@ -63,16 +70,19 @@ const Post = ({ postObj, redditData }) => {
       case "up":
         voteAction(1, postName);
         setVoteDir(1);
+        setScore(votePoints + 1);
         break;
 
       case "down":
         voteAction(-1, postName);
         setVoteDir(-1);
+        setScore(votePoints - 1);
         break;
 
       default:
         voteAction(0, postName);
         setVoteDir(0);
+        setScore(votePoints);
         break;
     }
   };
@@ -90,7 +100,7 @@ const Post = ({ postObj, redditData }) => {
             <BsShift onClick={() => handleVoteClick("up")} className={arrowIconCCS} />
           )}
         </button>
-        <h3>{votePoints}</h3>
+        <h3>{votesFormat(score)}</h3>
         <button className={downButtonsCCS}>
           {voteDir < 0 ? (
             <BsShiftFill

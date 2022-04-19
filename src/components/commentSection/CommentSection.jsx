@@ -12,8 +12,12 @@ const CommentSection = (props) => {
   const { commentSectionCSS, textAreaBoxCCS, commentLabelBoxCSS, commentButtonCSS } =
     commentSectionStyle;
 
-  const handleSubmit = () => {
-    commentAction(postName, comment);
+  const handleSubmit = async () => {
+    const { data } = await commentAction(postName, comment);
+    if (data.success) {
+      alert("Message sent successfully");
+    }
+    setComment("");
   };
 
   return (

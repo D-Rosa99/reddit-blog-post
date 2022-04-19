@@ -30,6 +30,10 @@
   font-size: 25px;
 } 
 
+.arrowIconCCS:hover{
+  background-color: lightgray;
+}
+
 .postContentCCS {
   width: 88%;
 }
