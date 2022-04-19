@@ -1,4 +1,9 @@
-import Axios from "axios";
+import axios from "axios";
 
-export const httpRequest = async (method, url, params = {}) =>
-  await Axios[method](url, params);
+export const httpRequest = (method, url, params = {}, config = null) => {
+  if (config) {
+    return axios[method](url, params, config);
+  }
+
+  return axios[method](url, params);
+};

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BsShift,
   BsChatSquareText,
@@ -11,7 +11,8 @@ import MediaSource from "../mediaSource/MediaSource";
 
 import postStyle from "./post.module.css";
 
-const Post = ({ postObj }) => {
+const Post = ({ postObj, redditData }) => {
+  const [voteDir, setVoteDir] = useState(0);
   const {
     title,
     content,
@@ -24,8 +25,21 @@ const Post = ({ postObj }) => {
     handlePostClick,
   } = postObj;
 
+  const { downVotedHistoryList, upVotedHistoryList } = redditData;
+
   const { postCardCCS, upButtonsCCS, downButtonsCCS, arrowIconCCS, postContentCCS, boxActionCCS } =
     postStyle;
+
+  useEffect(() => {
+    if (checkMatchVotedHistory(upVotedHistoryList)) setVoteDir(1);
+    else if (checkMatchVotedHistory(downVotedHistoryList)) setVoteDir(-1);
+  }, []);
+
+  const checkMatchVotedHistory = (votedHistory) => {
+    if (!votedHistory.length) return false;
+
+    return votedHistory.some((post) => post.data.title === title);
+  };
 
   return (
     <div className={postCardCCS}>
