@@ -3,8 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../../components/header/Header";
 import Post from "../../components/post/Post";
 import { postMapper } from "../../mappers/postInfo.mappers";
-import { getRedditOauthToken } from "../../service/redditAuthentication";
-import { getRedditData } from "../../service/redditUserAccountData";
+import { getRedditOauthToken } from "../../services/redditAuthentication.service";
+import { getRedditData } from "../../services/redditUserAccountData.service";
 import { httpRequest } from "../../utils/request";
 
 import homeStyle from "./home.module.css";
@@ -33,14 +33,18 @@ const Home = () => {
   const handlePostClick = (postDetailUrl) => {
     navigate(postDetailUrl);
   };
-  console.log("redditData :>> ", redditData);
+
   return (
     <div>
       <Header totalKarma={redditData?.totalKarma} />
       <div className={postBoxCCS}>
         {posts.length
-          ? posts.map((post, index) => (
-              <Post key={index} postObj={{ ...post, handlePostClick }} redditData={redditData} />
+          ? posts.map((post) => (
+              <Post
+                key={post.postName}
+                postObj={{ ...post, handlePostClick }}
+                redditData={redditData}
+              />
             ))
           : "Loading..."}
       </div>

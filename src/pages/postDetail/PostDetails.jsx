@@ -8,7 +8,7 @@ import CommentSection from "../../components/commentSection/CommentSection";
 import postDetailStyle from "./postDetails.module.css";
 
 const PostDetails = () => {
-  const [postInfo, setPostInfo] = useState([]);
+  const [detailData, setDetailData] = useState({});
   const { pathname } = useLocation();
 
   const { postDetailBoxCCS } = postDetailStyle;
@@ -16,17 +16,23 @@ const PostDetails = () => {
   useEffect(() => {
     httpRequest("get", `${process.env.REACT_APP_REDDIT_BASE_URL}${pathname}.json`).then(
       ({ data }) => {
-        setPostInfo(data);
+        const postSection = postMapper(data[0].data)[0];
+        const commentSection = data[1].data.children;
+
+        setDetailData({
+          postSection,
+          commentSection: { ...commentSection, postName: postSection.postName },
+        });
       }
     );
   }, []);
 
   return (
     <div className={postDetailBoxCCS}>
-      {postInfo.length ? (
+      {detailData.length ? (
         <Fragment>
-          <PostCard postObj={postMapper(postInfo[0].data)[0]} />
-          <CommentSection />
+          <PostCard postObj={detailData.postSection} redditData={{}} />
+          <CommentSection commentObj={detailData.commentSection} />
         </Fragment>
       ) : (
         "Loading..."

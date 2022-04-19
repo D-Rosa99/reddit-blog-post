@@ -12,5 +12,3 @@ export const postMapper = (data) =>
     postDetail: post.data.permalink,
     postName: post.data.name,
   }));
-
-//BsShiftFill arrow fill

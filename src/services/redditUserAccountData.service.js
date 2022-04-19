@@ -29,8 +29,6 @@ export const getRedditData = async () => {
     paramsObj
   );
 
-  console.log("getUser.data.total_Karma, :>> ", getUser.data.total_karma);
-
   return {
     totalKarma: getUser.data.total_karma,
     upVotedHistoryList: getUpvotedHistory.data.data.children,

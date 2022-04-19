@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Button from "@mui/material/Button";
+import { commentAction } from "../../services/redditActions.service";
 
 import commentSectionStyle from "./commentSection.module.css";
 
-const CommentSection = () => {
+const CommentSection = (props) => {
+  const { postName } = props;
   const [comment, setComment] = useState("");
 
   const { commentSectionCSS, textAreaBoxCCS, commentLabelBoxCSS, commentButtonCSS } =
     commentSectionStyle;
+
+  const handleSubmit = () => {
+    commentAction(postName, comment);
+  };
 
   return (
     <div className={commentSectionCSS}>
@@ -23,7 +29,12 @@ const CommentSection = () => {
         value={comment}
         onChange={({ target }) => setComment(target.value)}
       />
-      <Button className={commentButtonCSS} disabled={comment.length < 1} variant="contained">
+      <Button
+        className={commentButtonCSS}
+        disabled={comment.length < 1}
+        variant="contained"
+        onClick={handleSubmit}
+      >
         Comment
       </Button>
     </div>

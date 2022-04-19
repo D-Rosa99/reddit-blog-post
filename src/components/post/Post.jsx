@@ -6,7 +6,9 @@ import {
   BsThreeDots,
   BsBookmark,
   BsShare,
+  BsShiftFill,
 } from "react-icons/bs";
+import { voteAction } from "../../services/redditActions.service";
 import MediaSource from "../mediaSource/MediaSource";
 
 import postStyle from "./post.module.css";
@@ -23,33 +25,81 @@ const Post = ({ postObj, redditData }) => {
     contentType,
     postDetail,
     handlePostClick,
+    postName,
   } = postObj;
 
-  const { downVotedHistoryList, upVotedHistoryList } = redditData;
-
-  const { postCardCCS, upButtonsCCS, downButtonsCCS, arrowIconCCS, postContentCCS, boxActionCCS } =
-    postStyle;
+  const {
+    postCardCCS,
+    upButtonsCCS,
+    downButtonsCCS,
+    arrowIconCCS,
+    postContentCCS,
+    boxActionCCS,
+    fillUpArrowIconCCS,
+    fillDownArrowIconCCS,
+  } = postStyle;
 
   useEffect(() => {
-    if (checkMatchVotedHistory(upVotedHistoryList)) setVoteDir(1);
-    else if (checkMatchVotedHistory(downVotedHistoryList)) setVoteDir(-1);
+    if (checkMatchVotedHistory(redditData?.upVotedHistoryList)) setVoteDir(1);
+    else if (checkMatchVotedHistory(redditData?.downVotedHistoryList)) setVoteDir(-1);
   }, []);
 
   const checkMatchVotedHistory = (votedHistory) => {
-    if (!votedHistory.length) return false;
+    if (!votedHistory?.length) return false;
 
-    return votedHistory.some((post) => post.data.title === title);
+    return votedHistory.some((post) => {
+      console.log("post ", post);
+      return post.data.title === title;
+    });
+  };
+
+  const handleVoteClick = (voteDir) => {
+    if (!redditData?.totalKarma) {
+      alert("You need to log in to vote");
+      return;
+    }
+
+    switch (voteDir) {
+      case "up":
+        voteAction(1, postName);
+        setVoteDir(1);
+        break;
+
+      case "down":
+        voteAction(-1, postName);
+        setVoteDir(-1);
+        break;
+
+      default:
+        voteAction(0, postName);
+        setVoteDir(0);
+        break;
+    }
   };
 
   return (
     <div className={postCardCCS}>
       <div>
         <button className={upButtonsCCS}>
-          <BsShift className={arrowIconCCS} />
+          {voteDir > 0 ? (
+            <BsShiftFill
+              onClick={() => handleVoteClick("neutral")}
+              className={`${fillUpArrowIconCCS} ${arrowIconCCS}`}
+            />
+          ) : (
+            <BsShift onClick={() => handleVoteClick("up")} className={arrowIconCCS} />
+          )}
         </button>
         <h3>{votePoints}</h3>
         <button className={downButtonsCCS}>
-          <BsShift className={arrowIconCCS} />
+          {voteDir < 0 ? (
+            <BsShiftFill
+              onClick={() => handleVoteClick("neutral")}
+              className={`${fillDownArrowIconCCS} ${arrowIconCCS}`}
+            />
+          ) : (
+            <BsShift onClick={() => handleVoteClick("down")} className={arrowIconCCS} />
+          )}
         </button>
       </div>
       <div className={postContentCCS} onClick={() => handlePostClick(postDetail)}>
